@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thủy Tồ 💖</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: 'Montserrat', sans-serif;
+        background: black;
+        color: white;
+      }
+
+      .container2 {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 0;
+      }
+
+      #universe {
+        width: 100%;
+        height: 100%;
+      }
+
+      .title {
+        position: absolute;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 10;
+      }
+
+      .title h1, .title h3 {
+        margin: 5px 0;
+      }
+
+      .STARDUST1 { font-size: 20px; letter-spacing: 4px; color: #fff; opacity: 0.8; }
+      .STARDUST2 { font-size: 50px; color: #ff79c6; text-shadow: 0 0 15px #ff79c6; }
+      .STARDUST3 { font-size: 18px; letter-spacing: 6px; color: #fff; opacity: 0.8; }
+
+      .img {
+        width: 150px;
+        border-radius: 50%;
+        margin-top: 15px;
+        box-shadow: 0 0 15px #ff79c6;
+        animation: pulse 3s infinite ease-in-out;
+      }
+
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); box-shadow: 0 0 15px #ff79c6; }
+        50% { transform: scale(1.05); box-shadow: 0 0 25px #ff9ee9; }
+      }
+
+      #pinkboard {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+      }
+
+      audio {
+        display: none;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Nhạc nền -->
+    <audio id="bg-music" loop>
+      <source src="STM.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- Hiệu ứng sao -->
+    <div class="container2">
+      <canvas id="universe"></canvas>
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="title">
+      <h3 class="STARDUST1">2026</h3>
+      <h1 class="STARDUST2">Thủy Tồ</h1>
+      <h3 class="STARDUST3">L O V E <strong>❤</strong> Y O U</h3>
+      <img class="img" src="thuy.jpg" alt="Love Image">
+    </div>
+
+    <!-- Hiệu ứng trái tim -->
+    <canvas id="pinkboard"></canvas>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <!-- Universe (sao rơi) -->
+    <script>
+      const canvas = document.getElementById("universe");
+      const ctx = canvas.getContext("2d");
+      let stars = [];
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.onresize = resize;
+      resize();
+
+      for (let i = 0; i < 150; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.5,
+          d: Math.random() * 2
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+          ctx.moveTo(s.x, s.y);
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2, true);
+        }
+        ctx.fill();
+        update();
+      }
+
+      let angle = 0;
+      function update() {
+        angle += 0.01;
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+          s.y += Math.cos(angle + s.d) + 1 + s.r / 2;
+          s.x += Math.sin(angle) * 2;
+
+          if (s.x > canvas.width + 5 || s.x < -5 || s.y > canvas.height) {
+            stars[i] = { x: Math.random() * canvas.width, y: -10, r: s.r, d: s.d };
+          }
+        }
+      }
+      setInterval(draw, 40);
+    </script>
+
+    <!-- Pink hearts -->
+    <script>
+      const pinkboard = document.getElementById("pinkboard");
+      const pctx = pinkboard.getContext("2d");
+      function resizePink() {
+        pinkboard.width = window.innerWidth;
+        pinkboard.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resizePink);
+      resizePink();
+
+      const hearts = [];
+      function createHeart() {
+        hearts.push({
+          x: Math.random() * pinkboard.width,
+          y: pinkboard.height + 10,
+          size: Math.random() * 8 + 5,
+          speed: Math.random() * 1 + 0.5,
+          opacity: Math.random() * 0.5 + 0.5
+        });
+      }
+
+      function drawHearts() {
+        pctx.clearRect(0, 0, pinkboard.width, pinkboard.height);
+        for (let i = 0; i < hearts.length; i++) {
+          const h = hearts[i];
+          pctx.beginPath();
+          pctx.globalAlpha = h.opacity;
+          pctx.fillStyle = "#ff79c6";
+          const topCurveHeight = h.size * 0.3;
+          pctx.moveTo(h.x, h.y + topCurveHeight);
+          pctx.bezierCurveTo(
+            h.x - h.size / 2, h.y - topCurveHeight,
+            h.x - h.size, h.y + h.size / 1.5,
+            h.x, h.y + h.size
+          );
+          pctx.bezierCurveTo(
+            h.x + h.size, h.y + h.size / 1.5,
+            h.x + h.size / 2, h.y - topCurveHeight,
+            h.x, h.y + topCurveHeight
+          );
+          pctx.fill();
+          h.y -= h.speed;
+          if (h.y < -10) hearts.splice(i, 1);
+        }
+      }
+
+      setInterval(() => {
+        createHeart();
+        drawHearts();
+      }, 50);
+    </script>
+
+    <!-- Auto play nhạc khi click -->
+    <script>
+      const music = document.getElementById("bg-music");
+      document.body.addEventListener("click", () => {
+        music.play();
+      }, { once: true });
+    </script>
+  </body>
+</html>
